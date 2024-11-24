@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Posts</title>
+</head>
+<body>
+    <div>
+        <form action="/" method="GET">
+            <button>Home</button>
+        </form>
+    </div>
+    <h1>Display Post</h1>
+    <% if (posts.length > 0) { %>
+        <ul>
+            <% for(let i = 0; i < posts.length; i++){ %>
+                <li><%= i + 1 %>: <%= posts[i] %></li>
+            <% }; %>
+        </ul>
+    <% } else { %>
+        <p>No posts available</p>
+    <% } %>
+</body>
+</html>
