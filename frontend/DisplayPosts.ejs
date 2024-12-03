@@ -15,7 +15,8 @@
     <% if (posts.length > 0) { %>
         <ul>
             <% for(let i = 0; i < posts.length; i++){ %>
-                <li><%= i + 1 %>: <%= posts[i] %></li>
+                <li><%= i + 1 %>: <%= posts[i].Content %></li>
+                <li>Net likes or dislikes is <%= posts[i].NetScore %></li>
             <% }; %>
         </ul>
     <% } else { %>
