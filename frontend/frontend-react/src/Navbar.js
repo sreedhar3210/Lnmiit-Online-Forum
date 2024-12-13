@@ -1,15 +1,27 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
 
-    const handleCreatePostClick = () => {
-        console.log('handle create posts button is clicked.')
+    const navigate = useNavigate();
+
+    const handleonClickHome = () => {
+        navigate('/');
     };
+
+    const handleonClickCreatePost = () => {
+        navigate('/create-post');
+    };
+
+    const handleonClickDisplayPosts = () => {
+        navigate('/display-posts');
+    }
 
     return(
         <div>
-            <button onClick={handleCreatePostClick}>Create Post</button>
-            <button>Display Posts</button>
+            <button onClick={handleonClickHome}>Home</button>
+            <button onClick={handleonClickCreatePost}>Create Post</button>
+            <button onClick={handleonClickDisplayPosts}>Display Posts</button>
         </div>
     )
 }

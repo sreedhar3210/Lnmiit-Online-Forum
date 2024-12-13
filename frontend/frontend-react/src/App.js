@@ -1,6 +1,7 @@
 import React from 'react';
 import Home from './Home';
 import CreatePost from './CreatePost';
+import DisplayPosts from './DisplayPosts';
 import {
   BrowserRouter,
   Routes,
@@ -14,6 +15,7 @@ const App = () => {
         <Routes>
           <Route exact path='/' element={<Home/>}></Route>
           <Route exact path='/create-post' element={<CreatePost/>}></Route>
+          <Route exact path='/display-posts' element={<DisplayPosts/>}></Route>
         </Routes>
       </div>
     </BrowserRouter>

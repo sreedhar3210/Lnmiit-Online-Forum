@@ -1,0 +1,20 @@
+.postContent {
+    position: relative; /* Allow precise positioning of the button */
+    width: 600px; /* Set a width for the container */
+}
+
+.postContentInput {
+    width: 600px; /* Adjust width as per your design */
+    height: 150px; /* Initial height */
+}
+
+.postContentSubmit{
+    width: 80px;
+    height: 30px;
+    font-size: 16px; /* Set a clear font size */
+    color: #fff; /* White text color */
+    background-color: #007bff; /* Simple blue background */
+    border: none; /* Remove default border */
+    border-radius: 20px; /* Fully rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
