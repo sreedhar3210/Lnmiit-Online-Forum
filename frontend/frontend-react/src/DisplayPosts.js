@@ -14,7 +14,7 @@ const DisplayPosts = () => {
                 setPosts(data); // Update the state with the fetched data
             })
             .catch(err => console.error("Error fetching data:", err));
-    }, []); // Empty dependency array ensures this runs only once when the component mounts
+    }, [posts]); // Empty dependency array ensures this runs only once when the component mounts
 
     //Use a for loop to build the display items
     let postItems = [];

@@ -7,7 +7,7 @@ const CreatePost = () => {
         <div>
             <Navbar/>
             <div className="postContent">
-                <form action="http://localhost:8080/create-post" method="POST">
+                <form action="http://localhost:8080/api/create-post" method="POST">
                     <textarea
                         name="PostContent"
                         placeholder="Enter post content here" 
