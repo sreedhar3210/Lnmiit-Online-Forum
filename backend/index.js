@@ -10,15 +10,16 @@ const createPost = (id, postContent) => {
     return({
         "Id": id,
         "PostContent": postContent,
-        "NetScore": 5,
+        "NetScore": 0,
         "Comments": []
     })
 };
-const createComment = (id, postId, commentContent) => {
+const createComment = (postId, commentContent) => {
     return({
-        "Id": id,
+        "Id": posts[postId-1].Comments.length + 1,
         "PostId": postId,
-        "CommentContent": commentContent
+        "CommentContent": commentContent,
+        "NetScore": 0
     })
 }
 var cnt = 0;
@@ -46,21 +47,32 @@ app.post('/api/post-likes-or-dislikes', (req,res) => {
     console.log('data is ', data);
     posts[data.id-1].NetScore=data.value;
     console.log('posts are ', posts);
-    res.redirect('http://localhost:3000/display-posts');
+    //res.redirect('http://localhost:3000/display-posts');
 });
 
 app.post('/api/post-comments', (req,res) => {
-    console.log('>>>>>> comments has been called.');
     const data = req.body;
-    console.log('posting comments', data);
-    var postId = req.body.postId;
-    var comment = createComment(++curCommentId, data.postId, data.commentContent);
+    var postId = data.postId;
+    var comment = createComment(data.postId, data.commentContent);
     console.log('>>>>>> this is the comment being created ', comment);
     posts[postId-1].Comments.push(comment);
     console.log('>>>posts are ', posts);
     console.log('>>>post.comments are ', posts[0].Comments);
-})
+    //res.redirect('http://localhost:3000/display-posts');
+});
 
+app.post('/api/comment-likes-or-dislikes', (req,res) => {
+    console.log('inside comments likes or dislikes');
+    const data = req.body;
+    console.log('data is ', data);
+    console.log('posts are ', posts);
+    console.log('>>>>> corresponding post is ', posts[data.postId-1]);
+    console.log('>>>>> post comments are ', posts[data.postId-1].Comments);
+    console.log('>>>>> corresponding comment is ', posts[data.postId-1].Comments[data.Id-1])
+
+    posts[data.postId-1].Comments[data.id-1].NetScore = data.value;
+    console.log('posts are ', posts);
+})
 
 app.listen(port,() => {
     console.log('listening on the port ' + port);

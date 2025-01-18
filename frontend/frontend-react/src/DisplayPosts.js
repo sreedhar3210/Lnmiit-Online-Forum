@@ -19,11 +19,8 @@ const DisplayPosts = () => {
     //Use a for loop to build the display items
     let postItems = [];
     for (let i = 0; i < posts.length; i++) {
-        postItems.push(
-            // <li key={i}>
-            //     {i +"->" + posts[i].PostContent}
-            // </li>
-            <Post post={posts[i]} />
+        postItems.push(   
+            <Post key={posts[i].Id} post={posts[i]} />
         );
     }
 

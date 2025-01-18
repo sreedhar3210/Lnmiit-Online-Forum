@@ -25,15 +25,13 @@ function Post({ post }) {
   }
 
   const handleOnCommentSubmit = (event) => {
-    console.log('>>>>>>> submit button is clicked.')
     setCommentContent(tmpCommentContent);
     setTmpCommentContent('');
-    console.log('>>>>>>> on submit button has been clicked and comment Content is ', commentContent);
   }
 
   useEffect(() => {
     
-    if(score !== undefined){
+    if(score !== post.NetScore){
 
       let options = {
         method: "POST",
@@ -49,8 +47,9 @@ function Post({ post }) {
       console.log('>>>>>> use Effect is executesd.')
       fetch('http://localhost:8080/api/post-likes-or-dislikes', options)
     }
-  }, [score, post.Id]);
-
+    // eslint-disable-next-line
+  }, [score]);
+  
   useEffect(() => {
 
     //since we are re-directing to DisplayPosts.js after creating a post, we need to use this 
@@ -70,13 +69,13 @@ function Post({ post }) {
       console.log('>>>>>> comments useEffect is called.')
       fetch('http://localhost:8080/api/post-comments', options)
     }
-  }, [commentContent, post.Id])
+    // eslint-disable-next-line
+  }, [commentContent])
 
   let commentItems = [];
   for (let i = 0; i < post.Comments.length; i++) {
     commentItems.push(
-      <Comment comment = {post.Comments[i]} />
-      // <Post post={posts[i]} />
+      <Comment key = {post.Comments[i].Id} comment = {post.Comments[i]} />
     );
   }
 
@@ -90,7 +89,8 @@ function Post({ post }) {
       <div className="reaction-buttons">
         <button className="like-button" onClick={handleLike}>👍 Like</button>
         <button className="dislike-button" onClick={handleDisLike}>👎 Dislike</button>
-        <p>netScore is {post.NetScore}</p>
+        {/* <p>netScore is {post.NetScore}</p> */}
+        <p>netScore is {score}</p>
       </div>
 
       {/* Displaying comments */}
