@@ -1,19 +1,19 @@
 const cors = require('cors');
-const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const createPostNode = require('./CreatePostNode');
 const app = express();
 
 const port = 8080;
-const createPost = (id, postContent) => {
+const createPost = (id, postContent, tags) => {
     return({
         "Id": id,
         "PostContent": postContent,
         "NetScore": 0,
-        "Comments": []
+        "Comments": [],
+        "Tags": tags
     })
 };
+
 const createComment = (postId, commentContent) => {
     return({
         "Id": posts[postId-1].Comments.length + 1,
@@ -32,10 +32,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.post('/api/create-post', (req,res) => {
-    var postContent = req.body.PostContent;
-    var post = createPost(++curId, postContent);
+    console.log('>>> got into create post.');
+    var data = req.body;
+    console.log('>>>> data is ', data);
+    var post = createPost(++curId, data.postContent, data.tags);
+    console.log('>>>> post is ', post);
     posts.push(post);
-    res.redirect('http://localhost:3000/display-posts');
+    //res.redirect('http://localhost:3000/display-posts');
+    res.status(200).json({ success: true });
 });
 
 app.get('/api/get-posts', (req, res) => {
@@ -64,11 +68,11 @@ app.post('/api/post-comments', (req,res) => {
 app.post('/api/comment-likes-or-dislikes', (req,res) => {
     console.log('inside comments likes or dislikes');
     const data = req.body;
-    console.log('data is ', data);
-    console.log('posts are ', posts);
-    console.log('>>>>> corresponding post is ', posts[data.postId-1]);
-    console.log('>>>>> post comments are ', posts[data.postId-1].Comments);
-    console.log('>>>>> corresponding comment is ', posts[data.postId-1].Comments[data.Id-1])
+    // console.log('data is ', data);
+    // console.log('posts are ', posts);
+    // console.log('>>>>> corresponding post is ', posts[data.postId-1]);
+    // console.log('>>>>> post comments are ', posts[data.postId-1].Comments);
+    // console.log('>>>>> corresponding comment is ', posts[data.postId-1].Comments[data.Id-1])
 
     posts[data.postId-1].Comments[data.id-1].NetScore = data.value;
     console.log('posts are ', posts);
