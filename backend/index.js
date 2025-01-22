@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const port = 8080;
+
 const createPost = (id, postContent, tags) => {
     return({
         "Id": id,
@@ -21,24 +22,25 @@ const createComment = (postId, commentContent) => {
         "CommentContent": commentContent,
         "NetScore": 0
     })
-}
+};
+
 var cnt = 0;
 var curId = 0;
 var curCommentId = 0;
 var posts = [];
+const tagsSet = new Set();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.post('/api/create-post', (req,res) => {
-    console.log('>>> got into create post.');
     var data = req.body;
-    console.log('>>>> data is ', data);
     var post = createPost(++curId, data.postContent, data.tags);
-    console.log('>>>> post is ', post);
     posts.push(post);
-    //res.redirect('http://localhost:3000/display-posts');
+    data.tags.forEach(tag => {
+        tagsSet.add(tag);
+    });
     res.status(200).json({ success: true });
 });
 
