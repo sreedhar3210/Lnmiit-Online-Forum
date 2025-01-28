@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoDB = require('./db');
 const app = express();
 
 const port = 8080;
@@ -33,6 +34,8 @@ const tagsSet = new Set();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+mongoDB();
 
 app.post('/api/create-post', (req,res) => {
     var data = req.body;
