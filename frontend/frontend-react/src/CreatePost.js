@@ -48,9 +48,12 @@ const CreatePost = () => {
           
             console.log('>>>>>> CreatePost use Effect is executed.')
             fetch('http://localhost:8080/api/create-post', options)
-            .then((res) => {
-                navigate('/display-posts');
-            })
+            // ************************
+            // commenting the below one, for testing purposes but shall be removed later.
+            // .then((res) => {
+            //     navigate('/display-posts');
+            // })
+            // ************************
         }
         // eslint-disable-next-line
     }, [readyToSubmit]);

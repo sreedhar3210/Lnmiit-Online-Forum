@@ -83,6 +83,7 @@ function Post({ post }) {
     <div className="post-container">
       <p className="post-content">
         {post.Id} Post content is {post.PostContent}
+        Post Created at {post.createdDate}
       </p>
 
       {/* Like and Dislike Buttons */}
