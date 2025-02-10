@@ -15,7 +15,11 @@ const PostSchema = new Schema({
         type: Date,
         immutable: true,
         default: Date.now
-    }
+    },
+    tags: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tag'  // Reference to the 'Tag' collection, if you're using a separate Tag model
+    }]
 }, {
     versionKey: false
 });

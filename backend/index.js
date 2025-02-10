@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoDB = require('./mongoDB_services/db');
 const app = express();
-const mongoFetchPosts = require('./mongoDB_services/mongoFetchPosts');
-const { mongoInsertPost } = require('./mongoDB_services/mongoPostActions');
+const { mongoFetchFormattedPosts } = require('./mongoDB_services/mongoFetchData');
+const { mongoInsertPost, mongoPostScoreUpdate } = require('./mongoDB_services/mongoPostActions');
 const postNode = require('./data_nodes/PostNode');
 
 const port = 8080;
@@ -42,19 +42,22 @@ app.post('/api/create-post', async (req,res) => {
     res.status(200).json({ success: true });
 });
 
+//insert posts is also being updated in backend as well.
 app.get('/api/get-posts', async(req, res) => {
     //res.send(posts); // Send JSON response
-    const fetchedData = await mongoFetchPosts();
-    console.log('>>>>>> in index.js we got this fetched data ', fetchedData);
+    console.log('>>>>> get posts api is called.');
+    const fetchedData = await mongoFetchFormattedPosts();
     posts = fetchedData.data;
     res.send(posts);
 });
 
-app.post('/api/post-likes-or-dislikes', (req,res) => {
+app.post('/api/post-likes-or-dislikes', async(req,res) => {
     const data = req.body;
-    console.log('data is ', data);
-    posts[data.id-1].NetScore=data.value;
-    console.log('posts are ', posts);
+    console.log('>>>> in post likes or dislikes data is ', data);
+    await mongoPostScoreUpdate(data.id, data.value);
+    
+    // posts[data.id-1].NetScore=data.value;
+    // console.log('posts are ', posts);
     //res.redirect('http://localhost:3000/display-posts');
 });
 

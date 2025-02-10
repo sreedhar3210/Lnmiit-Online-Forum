@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import './css/CreatePost.css';
@@ -6,10 +7,14 @@ import './css/CreatePost.css';
 const CreatePost = () => {  
 
     const navigate = useNavigate();
+    const [selectedTags, setSelectedTags] = useState([]);
     const [readyToSubmit, setReadyToSubmit] = useState(false);
-    const [tag, setTag] = useState('');
     const [postContent, setPostContent] = useState('');
-    const [tags, setTags] = useState(['Html', 'JS']);
+    const options = [
+        {   value: '67a20fdbd22deb270c0a12cd', label: 'Java'},
+        {   value: '67a20febd22deb270c0a12ce', label: 'Html'},
+        {   value: '67a20ffbd22deb270c0a12cf', label: 'Cinema'}
+    ];
 
     const handlePostContentChange = (event) => {
         setPostContent(event.target.value);
@@ -20,16 +25,15 @@ const CreatePost = () => {
         setReadyToSubmit(true);
     }
 
-    const handleTagInputChange = (event) => {
-        setTag(event.target.value);
-    };
-
-    const handleTagSubmit = (event) => {
-        console.log('submitted tag is ', tag);
-        setTags([...tags, tag]); // Create a new array with the existing and new tags
-        console.log('new Tags Array is ', [...tags, tag]); // Logging the updated array
-        setTag(''); // Reset tmpTag
-    };
+    const handleDropdownChange = (selectedOptions) => {
+        console.log('>>>>> selectedOptions are ', selectedOptions);
+        var tagIds = [];
+        for(var i=0; i<selectedOptions.length; i++){
+            tagIds.push(selectedOptions[i].value);
+        }
+        setSelectedTags(tagIds);
+        console.log('selected tags are ', selectedTags);
+    }
     
     useEffect(() => {
 
@@ -42,18 +46,15 @@ const CreatePost = () => {
               },
               body: JSON.stringify({
                 postContent: postContent,
-                tags: tags
+                tags: selectedTags
               }),
             }
           
             console.log('>>>>>> CreatePost use Effect is executed.')
             fetch('http://localhost:8080/api/create-post', options)
-            // ************************
-            // commenting the below one, for testing purposes but shall be removed later.
-            // .then((res) => {
-            //     navigate('/display-posts');
-            // })
-            // ************************
+            .then((res) => {
+                navigate('/display-posts');
+            })
         }
         // eslint-disable-next-line
     }, [readyToSubmit]);
@@ -62,33 +63,20 @@ const CreatePost = () => {
         <div>
             <Navbar/>
             <div className="postContent">
-                {/* <form action="http://localhost:8080/api/create-post" method="POST" className="postForm"> */}
                     <textarea
                         name="PostContent"
                         placeholder="Enter post content here" 
                         className="postContentInput"
                         onChange={handlePostContentChange}
                         required></textarea>
-                    
-                    <input
-                        name="TagInput"
-                        type="text"
-                        value={tag}
-                        onChange={handleTagInputChange}
-                        className="tagInput"
-                    ></input>
-                    <button
-                        type="button"
-                        onClick={handleTagSubmit}
-                        className="tagSubmitButton"
-                    >Add Tag</button>
-                    <div className="tagsContainer">
-                        {tags.map((tag, index) => (
-                            <span key={index} className="tag">
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
+                    <p>this is being displayed</p>
+                
+                    <Select
+                        isMulti
+                        className="tagDropdown"
+                        options={options} 
+                        onChange={handleDropdownChange}/>
+
                     <button 
                         type="submit" 
                         className="postContentSubmit"
