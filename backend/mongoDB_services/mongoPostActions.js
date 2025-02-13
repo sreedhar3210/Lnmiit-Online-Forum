@@ -28,7 +28,7 @@ const mongoFetchPosts = async(...args) => {
     else{
         posts = await Post.find({ _id : args[0] });
     }
-    if(posts.size() > 0){
+    if(posts.length > 0){
         for(i=0;i<posts.length;i++){
             formattedPost = formatPost(posts[i]);
             formattedPost.Id = String(formattedPost.Id);

@@ -3,19 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoDB = require('./mongoDB_services/db');
 const app = express();
-const { mongoFetchFormattedPosts } = require('./mongoDB_services/mongoFetchData');
+const mongoFetchData = require('./mongoDB_services/mongoFetchData');
 const { mongoInsertPost, mongoPostScoreUpdate } = require('./mongoDB_services/mongoPostActions');
 const postNode = require('./data_nodes/PostNode');
+const commentNode = require('./data_nodes/CommentNode');
 
 const port = 8080;
-
-const createComment = (postId, commentContent) => {
-    return({
-        "postId": postId,
-        "commentContent": commentContent,
-        "netScore": 0
-    })
-};
 
 var cnt = 0;
 var curId = 0;
@@ -30,41 +23,29 @@ app.use(bodyParser.json());
 mongoDB();
 
 app.post('/api/create-post', async (req,res) => {
-    console.log('>>>>>> create post button is clicked');
     var data = req.body;
     var post = postNode(data.postContent, data.tags);
-    console.log('>>>>>> post from postNode is ', post);
     posts.push(post);
     await mongoInsertPost(post);
-    // data.tags.forEach(tag => {
-    //     tagsSet.add(tag);
-    // });
     res.status(200).json({ success: true });
 });
 
 //insert posts is also being updated in backend as well.
 app.get('/api/get-posts', async(req, res) => {
-    //res.send(posts); // Send JSON response
-    console.log('>>>>> get posts api is called.');
-    const fetchedData = await mongoFetchFormattedPosts();
+    const fetchedData = await mongoFetchData();
     posts = fetchedData.data;
     res.send(posts);
 });
 
 app.post('/api/post-likes-or-dislikes', async(req,res) => {
     const data = req.body;
-    console.log('>>>> in post likes or dislikes data is ', data);
     await mongoPostScoreUpdate(data.id, data.value);
-    
-    // posts[data.id-1].NetScore=data.value;
-    // console.log('posts are ', posts);
-    //res.redirect('http://localhost:3000/display-posts');
 });
 
 app.post('/api/post-comments', (req,res) => {
     const data = req.body;
     var postId = data.postId;
-    var comment = createComment(data.postId, data.commentContent);
+    var comment = commentNode(data.postId, data.commentContent);
     console.log('>>>>>> this is the comment being created ', comment);
     posts[postId-1].Comments.push(comment);
     console.log('>>>posts are ', posts);

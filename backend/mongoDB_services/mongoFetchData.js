@@ -1,13 +1,13 @@
-const { mongoFetchFormattedPosts } = require('./mongoPostActions/mongoFetchFormattedPosts');
-const { mongoFetchFormattedComments } = require('./mongoCommentActions/mongoFetchFormattedComments');
-const { mongoFetchFormattedTags } = require('./mongoTagActions/mongoFetchFormattedTags');
+const { mongoFetchPosts } = require('./mongoPostActions');
+const { mongoFetchComments } = require('./mongoCommentActions');
+const { mongoFetchTags } = require('./mongoTagActions');
 
 const formatData = async() => {
     var i,j,postIdIndex;
     var data = [], postIds = [];
-    const posts = await mongoFetchFormattedPosts();
-    const comments = await mongoFetchFormattedComments();
-    const tags = await mongoFetchFormattedTags();
+    const posts = await mongoFetchPosts();
+    const comments = await mongoFetchComments();
+    const tags = await mongoFetchTags();
     const tagIdNameMap = new Map();             // Map<tagId, tagName>
 
     for(i=0; i<tags.length; i++){
@@ -16,7 +16,7 @@ const formatData = async() => {
 
     for(i=0; i<posts.length; i++){
         postIds.push(posts[i].Id);
-        for(j=0; j<(posts[i].tags).length; j++){
+        for(j=0; j<(posts[i].Tags).length; j++){
             // tagId = posts[i].tags[j];
             // formattedPost.Tags.push(tagIdNameMap.get(tagId));
             posts[i].Tags[j] = tagIdNameMap.get(posts[i].Tags[j]);

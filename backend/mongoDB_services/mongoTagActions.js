@@ -8,7 +8,7 @@ const formatTag = (tag) => {
     });
 }
 
-const mongoFetchFormattedTags = async() => {
+const mongoFetchTags = async() => {
     const tags = await Tag.find();
     var i;
     var formattedTag;
@@ -21,4 +21,4 @@ const mongoFetchFormattedTags = async() => {
     return tags;
 }
 
-module.exports = { mongoFetchFormattedTags };
+module.exports = { mongoFetchTags };

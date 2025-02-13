@@ -10,7 +10,7 @@ const formatComment = (comment) => {
     });
 }
 
-const mongoFetchFormattedComments = async() => {
+const mongoFetchComments = async() => {
     var i;
     var formattedComment;
     var formattedComments = [];
@@ -19,9 +19,9 @@ const mongoFetchFormattedComments = async() => {
         formattedComment = formatComment(comments[i]);
         formattedComment.Id = String(formattedComment.Id);
         formattedComment.PostId = String(formattedComment.PostId);
-        formattedComments.push(formttedComment);
+        formattedComments.push(formattedComment);
     }
     return comments;
 }
 
-module.exports = { mongoFetchFormattedComments };
+module.exports = { mongoFetchComments };
