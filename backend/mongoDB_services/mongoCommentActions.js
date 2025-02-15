@@ -6,8 +6,24 @@ const formatComment = (comment) => {
         "CommentContent": comment.commentContent,
         "NetScore": comment.netScore,
         "PostId": comment.postId,
-        "CreatedDate": comment.CreatedDate
+        "CreatedDate": comment.createdDate
     });
+}
+
+const mongoInsertComment = async(comment) => {
+    console.log('>>>> mongoInsertComment is called with ', comment);
+    const newComment = new Comment(comment);
+
+    newComment.save();
+    console.log('>>>> Comment is inserted.');
+}
+
+const mongoCommentScoreUpdate = async(commentId, newScore) => {
+    console.log('>>>> mongoCommentScoreUpdate method is called');
+    await Comment.updateOne(
+        { _id: commentId },
+        { $set: { netScore: newScore } } // Only update the netScore field
+    );
 }
 
 const mongoFetchComments = async() => {
@@ -21,7 +37,8 @@ const mongoFetchComments = async() => {
         formattedComment.PostId = String(formattedComment.PostId);
         formattedComments.push(formattedComment);
     }
-    return comments;
+    console.log('>>> formattedComments are ', formattedComments);
+    return formattedComments;
 }
 
-module.exports = { mongoFetchComments };
+module.exports = { mongoFetchComments, mongoInsertComment, mongoCommentScoreUpdate };

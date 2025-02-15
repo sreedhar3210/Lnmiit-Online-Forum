@@ -12,9 +12,7 @@ const PostSchema = new Schema({
         required: true
     },
     createdDate:{
-        type: Date,
-        immutable: true,
-        default: Date.now
+        type: String
     },
     tags: [{
         type: mongoose.Schema.Types.ObjectId,

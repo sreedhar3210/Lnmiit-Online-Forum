@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import './css/Post.css';
 import Comment from './Comment';
 
 function Post({ post }) {
 
+  const navigate = useNavigate();
   const [score, setScore] = useState(post.NetScore);
   const [tmpCommentContent, setTmpCommentContent] = useState('');
   const [commentContent, setCommentContent] = useState('');
@@ -68,6 +70,11 @@ function Post({ post }) {
       }
       console.log('>>>>>> comments useEffect is called.')
       fetch('http://localhost:8080/api/post-comments', options)
+      .then((res) => {
+          console.log('>>>>> comment inserted and got back to frontend/Post.js');
+          window.location.reload();
+          //navigate('/display-posts');
+      })
     }
     // eslint-disable-next-line
   }, [commentContent])
@@ -82,16 +89,16 @@ function Post({ post }) {
   return (
     <div className="post-container">
       <p className="post-content">
-        {post.Id} Post content is {post.PostContent}
-        Post Created at {post.createdDate}
+        {post.PostContent}
+        <br/>
+        Post Created at {post.CreatedDate}
       </p>
 
       {/* Like and Dislike Buttons */}
       <div className="reaction-buttons">
         <button className="like-button" onClick={handleLike}>👍 Like</button>
         <button className="dislike-button" onClick={handleDisLike}>👎 Dislike</button>
-        {/* <p>netScore is {post.NetScore}</p> */}
-        <p>netScore is {score}</p>
+        <p>NetScore is {score}</p>
       </div>
 
       {/* Displaying comments */}

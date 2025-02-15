@@ -53,6 +53,7 @@ const CreatePost = () => {
             console.log('>>>>>> CreatePost use Effect is executed.')
             fetch('http://localhost:8080/api/create-post', options)
             .then((res) => {
+                setReadyToSubmit(false);
                 navigate('/display-posts');
             })
         }

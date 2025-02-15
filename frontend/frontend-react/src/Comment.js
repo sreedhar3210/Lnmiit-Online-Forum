@@ -38,8 +38,9 @@ function Comment({ comment }) {
     return (
         <div>
             <p>
-                {comment.Id} Comment Content is {comment.CommentContent}
-                Comment Created Date is {comment.createdDate}
+                {comment.CommentContent}
+                <br/>
+                Comment Created at is {comment.CreatedDate}
             </p>
             {/* Like and Dislike Buttons */}
             <div className="reaction-buttons">

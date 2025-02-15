@@ -5,6 +5,7 @@ const mongoDB = require('./mongoDB_services/db');
 const app = express();
 const mongoFetchData = require('./mongoDB_services/mongoFetchData');
 const { mongoInsertPost, mongoPostScoreUpdate } = require('./mongoDB_services/mongoPostActions');
+const { mongoInsertComment, mongoCommentScoreUpdate } = require('./mongoDB_services/mongoCommentActions');
 const postNode = require('./data_nodes/PostNode');
 const commentNode = require('./data_nodes/CommentNode');
 
@@ -27,6 +28,7 @@ app.post('/api/create-post', async (req,res) => {
     var post = postNode(data.postContent, data.tags);
     posts.push(post);
     await mongoInsertPost(post);
+    console.log(post, ' is created');
     res.status(200).json({ success: true });
 });
 
@@ -39,26 +41,23 @@ app.get('/api/get-posts', async(req, res) => {
 
 app.post('/api/post-likes-or-dislikes', async(req,res) => {
     const data = req.body;
+    console.log('post likes or dislikes is called with postId = ', data.id, ' newScore is ', data.value);
     await mongoPostScoreUpdate(data.id, data.value);
 });
 
-app.post('/api/post-comments', (req,res) => {
+app.post('/api/post-comments', async(req,res) => {
     const data = req.body;
-    var postId = data.postId;
     var comment = commentNode(data.postId, data.commentContent);
     console.log('>>>>>> this is the comment being created ', comment);
-    posts[postId-1].Comments.push(comment);
-    console.log('>>>posts are ', posts);
-    console.log('>>>post.comments are ', posts[0].Comments);
-    //res.redirect('http://localhost:3000/display-posts');
+    await mongoInsertComment(comment);
+    res.status(200).json({ success: true });
 });
 
-app.post('/api/comment-likes-or-dislikes', (req,res) => {
+app.post('/api/comment-likes-or-dislikes', async(req,res) => {
     console.log('inside comments likes or dislikes');
     const data = req.body;
-
-    posts[data.postId-1].Comments[data.id-1].NetScore = data.value;
-    console.log('posts are ', posts);
+    console.log('comment likes or dislikes is called with commentId= ', data.id, ' newScore is ', data.value);
+    await mongoCommentScoreUpdate(data.id, data.value);
 })
 
 app.listen(port,() => {

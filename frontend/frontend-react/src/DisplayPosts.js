@@ -8,6 +8,7 @@ const DisplayPosts = () => {
 
     useEffect(() => {
         // Fetch data when the component mounts
+        console.log('***** Display posts useEffect is executed');
         fetch("http://localhost:8080/api/get-posts")
             .then(res => res.json())
             .then(data => {
