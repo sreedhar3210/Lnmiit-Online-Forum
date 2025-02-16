@@ -29,7 +29,6 @@ function Comment({ comment }) {
                 }),
             }
             
-            console.log('>>>>>> comment score use Effect is executesd.')
             fetch('http://localhost:8080/api/comment-likes-or-dislikes', options)
         }
         // eslint-disable-next-line

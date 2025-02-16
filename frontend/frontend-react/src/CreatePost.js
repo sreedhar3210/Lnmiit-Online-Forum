@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import AddTagModal from './AddTagModal';
 import './css/CreatePost.css';
 
 const CreatePost = () => {  
@@ -10,11 +11,7 @@ const CreatePost = () => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [readyToSubmit, setReadyToSubmit] = useState(false);
     const [postContent, setPostContent] = useState('');
-    const options = [
-        {   value: '67a20fdbd22deb270c0a12cd', label: 'Java'},
-        {   value: '67a20febd22deb270c0a12ce', label: 'Html'},
-        {   value: '67a20ffbd22deb270c0a12cf', label: 'Cinema'}
-    ];
+    const [options, setOptions] = useState([]);
 
     const handlePostContentChange = (event) => {
         setPostContent(event.target.value);
@@ -34,11 +31,17 @@ const CreatePost = () => {
         setSelectedTags(tagIds);
         console.log('selected tags are ', selectedTags);
     }
+
+    useEffect(() => {
+        console.log('**** fetch tags is called');
+        fetch("http://localhost:8080/api/get-tags")
+            .then(res => res.json())
+            .then(data => setOptions(data))
+            .catch(err => console.error("Error fetching data:", err));
+    }, [])
     
     useEffect(() => {
-
         if(readyToSubmit === true){
-
             let options = {
               method: "POST",
               headers: {
@@ -61,28 +64,33 @@ const CreatePost = () => {
     }, [readyToSubmit]);
 
     return(
-        <div>
+        <div className="create-post-container">
             <Navbar/>
-            <div className="postContent">
-                    <textarea
-                        name="PostContent"
-                        placeholder="Enter post content here" 
-                        className="postContentInput"
-                        onChange={handlePostContentChange}
-                        required></textarea>
-                    <p>this is being displayed</p>
+            <div className="post-content-wrapper">
+                <textarea
+                    name="PostContent"
+                    placeholder="Enter post content here" 
+                    className="post-content-input"
+                    onChange={handlePostContentChange}
+                    required
+                ></textarea>
+                <p className="display-message">This is being displayed</p>
                 
+                <div className="tag-selection-wrapper">
                     <Select
                         isMulti
-                        className="tagDropdown"
+                        className="tag-dropdown"
                         options={options} 
-                        onChange={handleDropdownChange}/>
+                        onChange={handleDropdownChange}
+                    />
+                    <AddTagModal/>
+                </div>
 
-                    <button 
-                        type="submit" 
-                        className="postContentSubmit"
-                        onClick={handleOnSubmit}>Submit</button>
-                {/* </form> */}
+                <button 
+                    type="submit" 
+                    className="post-content-submit"
+                    onClick={handleOnSubmit}
+                >Submit</button>
             </div>
         </div>
     );

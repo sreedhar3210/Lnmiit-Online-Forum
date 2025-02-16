@@ -40,11 +40,9 @@ const mongoFetchPosts = async(...args) => {
 }
 
 const mongoInsertPost = async(post) => {
-    console.log('>>>> mongoInsertPosts is called');
     const newPost = new Post(post);
 
     await newPost.save();
-    console.log('>>>> post is saved');
 };
 
 const mongoPostScoreUpdate = async(postId, newScore) => {

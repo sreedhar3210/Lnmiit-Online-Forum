@@ -2,23 +2,27 @@ const Tag = require('../mongoDB_models/Tag');
 
 const formatTag = (tag) => {
     return({
-        "Id": tag._id,
-        "TagName": tag.tagName,
-        "TagDescription": tag.tagDescription
+        "value": tag._id,
+        "label": tag.tagName
     });
+}
+
+const mongoInsertTag = async(tag) => {
+    const newTag = new Tag(tag);
+    
+    await newTag.save();
 }
 
 const mongoFetchTags = async() => {
     const tags = await Tag.find();
-    var i;
     var formattedTag;
     var formattedTags = [];
-    for(i=0;i<tags.length;i++){
+    for(var i=0;i<tags.length;i++){
         formattedTag = formatTag(tags[i]);
-        formattedTag.Id = String(formattedTag.Id);
+        formattedTag.value = String(formattedTag.value);
         formattedTags.push(formattedTag);
     }
-    return tags;
+    return formattedTags;
 }
 
-module.exports = { mongoFetchTags };
+module.exports = { mongoFetchTags, mongoInsertTag };

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
 import './css/Post.css';
 import Comment from './Comment';
 
 function Post({ post }) {
 
-  const navigate = useNavigate();
   const [score, setScore] = useState(post.NetScore);
   const [tmpCommentContent, setTmpCommentContent] = useState('');
   const [commentContent, setCommentContent] = useState('');

@@ -1,0 +1,40 @@
+.add-tag-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-text {
+    font-size: 14px;
+    color: #333;
+}
+
+.button-container {
+    margin-top: 10px;
+}
+
+.toggle-modal-button {
+    height: 30px;
+    width: 100px;
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #007bff;
+    
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.toggle-modal-button:hover {
+    background-color: #0056b3;
+}

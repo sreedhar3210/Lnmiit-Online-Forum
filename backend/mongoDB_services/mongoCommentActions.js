@@ -11,15 +11,12 @@ const formatComment = (comment) => {
 }
 
 const mongoInsertComment = async(comment) => {
-    console.log('>>>> mongoInsertComment is called with ', comment);
     const newComment = new Comment(comment);
 
     newComment.save();
-    console.log('>>>> Comment is inserted.');
 }
 
 const mongoCommentScoreUpdate = async(commentId, newScore) => {
-    console.log('>>>> mongoCommentScoreUpdate method is called');
     await Comment.updateOne(
         { _id: commentId },
         { $set: { netScore: newScore } } // Only update the netScore field
@@ -37,7 +34,6 @@ const mongoFetchComments = async() => {
         formattedComment.PostId = String(formattedComment.PostId);
         formattedComments.push(formattedComment);
     }
-    console.log('>>> formattedComments are ', formattedComments);
     return formattedComments;
 }
 

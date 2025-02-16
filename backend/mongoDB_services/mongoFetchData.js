@@ -39,7 +39,7 @@ const formatData = async() => {
 const mongoFetchData = async() => {
     const formattedData = await formatData();
     console.log('>>>>>> formatted Data  in mongofetch posts is', formattedData);
-    return { success: true, data: formattedData };
+    return formattedData;
 }
 
 module.exports = mongoFetchData;
