@@ -23,6 +23,10 @@ const mongoCommentScoreUpdate = async(commentId, newScore) => {
     );
 }
 
+const mongoDeleteCommentsWithPostId = async(postId) => {
+    await Comment.deleteMany({ postId: postId});
+}
+
 const mongoFetchComments = async() => {
     var i;
     var formattedComment;
@@ -37,4 +41,4 @@ const mongoFetchComments = async() => {
     return formattedComments;
 }
 
-module.exports = { mongoFetchComments, mongoInsertComment, mongoCommentScoreUpdate };
+module.exports = { mongoFetchComments, mongoInsertComment, mongoCommentScoreUpdate, mongoDeleteCommentsWithPostId };

@@ -46,10 +46,18 @@ const mongoInsertPost = async(post) => {
 };
 
 const mongoPostScoreUpdate = async(postId, newScore) => {
+    //here it is working even though _id is of type Object and postId is type String.
+    //it is working because postId is being passed as parameter to mongoose and mongoose is checking the condition.
     await Post.updateOne(
         { _id: postId },
         { $set: { netScore: newScore } } // Only update the netScore field
     );
 }
 
-module.exports = { mongoInsertPost, mongoPostScoreUpdate, mongoFetchPosts};
+const mongoDeletePost = async(postId) => {
+    await Post.deleteOne({ _id: postId });
+
+    console.log('>>>> post is deleted successfully');
+}
+
+module.exports = { mongoInsertPost, mongoPostScoreUpdate, mongoDeletePost, mongoFetchPosts};

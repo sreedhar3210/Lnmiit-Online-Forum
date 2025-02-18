@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const mongoDB = require('./mongoDB_services/db');
 const app = express();
 const mongoFetchData = require('./mongoDB_services/mongoFetchData');
-const { mongoInsertPost, mongoPostScoreUpdate } = require('./mongoDB_services/mongoPostActions');
-const { mongoInsertComment, mongoCommentScoreUpdate } = require('./mongoDB_services/mongoCommentActions');
+const { mongoInsertPost, mongoPostScoreUpdate, mongoDeletePost } = require('./mongoDB_services/mongoPostActions');
+const { mongoInsertComment, mongoCommentScoreUpdate, mongoDeleteCommentsWithPostId } = require('./mongoDB_services/mongoCommentActions');
 const { mongoFetchTags, mongoInsertTag } = require('./mongoDB_services/mongoTagActions');
 const postNode = require('./data_nodes/PostNode');
 const commentNode = require('./data_nodes/CommentNode');
@@ -35,6 +35,16 @@ app.get('/api/get-posts', async(req, res) => {
 app.post('/api/post-likes-or-dislikes', async(req,res) => {
     const data = req.body;
     await mongoPostScoreUpdate(data.id, data.value);
+});
+
+app.post('/api/delete-post', async(req,res) => {
+    const data =req.body;
+    await mongoDeletePost(data.id);
+
+    await mongoDeleteCommentsWithPostId(data.id);
+
+    res.status(200).json({ success: true});
+
 });
 
 app.post('/api/post-comments', async(req,res) => {

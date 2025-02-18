@@ -4,6 +4,7 @@ import Comment from './Comment';
 
 function Post({ post }) {
 
+  const [toDelete, setToDelete] = useState(false);
   const [score, setScore] = useState(post.NetScore);
   const [tmpCommentContent, setTmpCommentContent] = useState('');
   const [commentContent, setCommentContent] = useState('');
@@ -18,10 +19,13 @@ function Post({ post }) {
     //post.NetScore+=score;
   }
 
+  const handleDelete = () => {
+    console.log('>>>> Delete button is clicked');
+    setToDelete(true);
+  }
+
   const handlecommentContentChange = (event) => {
-    console.log('>>>>> handleCommentContentChange is executed');
     setTmpCommentContent(event.target.value);
-    console.log('>>>>>> tmpCommentContent is ', tmpCommentContent);
   }
 
   const handleOnCommentSubmit = (event) => {
@@ -29,6 +33,7 @@ function Post({ post }) {
     setTmpCommentContent('');
   }
 
+  //useEffect for like or dislike.
   useEffect(() => {
     
     if(score !== post.NetScore){
@@ -44,12 +49,12 @@ function Post({ post }) {
         }),
       }
     
-      console.log('>>>>>> use Effect is executesd.')
       fetch('http://localhost:8080/api/post-likes-or-dislikes', options)
     }
     // eslint-disable-next-line
   }, [score]);
   
+  //useEffect for adding a comment.
   useEffect(() => {
 
     //since we are re-directing to DisplayPosts.js after creating a post, we need to use this 
@@ -66,7 +71,7 @@ function Post({ post }) {
           commentContent: commentContent
         }),
       }
-      console.log('>>>>>> comments useEffect is called.')
+
       fetch('http://localhost:8080/api/post-comments', options)
       .then((res) => {
           console.log('>>>>> comment inserted and got back to frontend/Post.js');
@@ -84,23 +89,47 @@ function Post({ post }) {
     );
   }
 
+  //useEffect for deleting post.
+  useEffect(() => {
+
+    if(toDelete){
+      let options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: post.Id
+        }),
+      }
+
+      fetch('http://localhost:8080/api/delete-post', options)
+      .then((res) => {
+        console.log('>>>> from frontend Post.js post is deleted');
+        window.location.reload();
+      })
+    }
+    // eslint-disable-next-line
+  }, [toDelete])
+
   return (
     <div className="post-container">
       <p className="post-content">
         {post.PostContent}
         <br/>
-        Post Created at {post.CreatedDate}
+        <span className="post-date">Post Created at {post.CreatedDate}</span>
       </p>
 
       {/* Like and Dislike Buttons */}
       <div className="reaction-buttons">
         <button className="like-button" onClick={handleLike}>👍 Like</button>
         <button className="dislike-button" onClick={handleDisLike}>👎 Dislike</button>
-        <p>NetScore is {score}</p>
+        <p className="net-score">NetScore is {score}</p>
+        <button className="delete-button" onClick={handleDelete}>Delete</button>
       </div>
 
       {/* Displaying comments */}
-      <ul>
+      <ul className="comment-list">
         {commentItems}
       </ul>
 
