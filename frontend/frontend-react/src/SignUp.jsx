@@ -2,111 +2,256 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import './css/SignUp.css'; // Import the CSS file
 
 const SignUp = () => {
 
-	const navigate = useNavigate();
-	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
-	const [selectedDate, setSelectedDate] = useState(null);
-	const [password, setPassword] = useState('');
-	const [readyToSubmit, setReadyToSubmit ] = useState(false);
-	const [isCheckingOtp, setIsCheckingOtp] = useState(false);
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [isCheckingOtp, setIsCheckingOtp] = useState(false);
+    const [isOtpSubmitted, setIsOtpSubmitted] = useState(false);
+    const [otp, setOtp] = useState(0);
 
-	const handleOnSubmit = () => {
-		console.log('>>> username is ', username);
-		console.log('>>> email is ', email);
-		console.log('>>> firstName is ', firstName);
-		console.log('>>> lastname is ', lastName);
-		console.log('>>> selectedDate is ', selectedDate);
-		console.log('>>> password is ', password);
-		setReadyToSubmit(true);
-	};
+    const emailValidation = (email) => {
+        let isLnmiitEmail = email.length > 13 && email.slice(-13) === '@lnmiit.ac.in';
+        if (!isLnmiitEmail) {
+            alert('Please signup using lnmiit email only');
+        }
+        return isLnmiitEmail;
+    };
 
-	useEffect(() => {
-		if(readyToSubmit){
-			let options = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                username: username,
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                selectedDate: selectedDate,
-                password: password
-              }),
-            }
-          
-            fetch('http://localhost:8080/api/send-verification-email', options)
-            .then((res) => {
-                setReadyToSubmit(false);
-                setIsCheckingOtp(true);
-			})
-		}
-		// eslint-disable-next-line
-	}, [readyToSubmit]);
+    const passwordValidation = (password, confirmPassword) => {
+        let pswdMeetsReqs = false;
+        let areSame = password === confirmPassword;
+        let hasLowerChar = /[a-z]/.test(password);
+        let hasUpperChar = /[A-Z]/.test(password);
+        let hasNum = /[0-9]/.test(password);
+        let hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+        if (password.length < 8) {
+            alert('Password length should atleast be 8');
+        } else if (!areSame) {
+            alert('Password and Confirm Password shall be same.');
+        } else if (!hasLowerChar || !hasUpperChar || !hasNum || !hasSpecialChar) {
+            alert('Password must contain the following atleast one Lower Character, Upper Character, Number, SpecialCharacter');
+        } else pswdMeetsReqs = true;
+        return pswdMeetsReqs;
+    };
 
-	return (
-		<div>
-			<p>From signup page.</p>
+    const handleFormSubmit = () => {
+        const validationResult = emailValidation(email) && passwordValidation(password, confirmPassword);
+        console.log('>>>> user validation status is ', validationResult);
+        setIsFormSubmitted(validationResult);
+    };
 
-			<input
-				type="text"
-				value={username}
-				onChange={(event) => setUsername(event.target.value)}
-				placeholder="Username"
-				label="Username"
-			/>
+    const handleOtpSubmit = () => {
+        setIsOtpSubmitted(true);
+    };
 
-			<input
-				type="text"
-				value={email}
-				onChange={(event) => setEmail(event.target.value)}
-				placeholder="Email"
-			/>
+    useEffect(() => {
+        if (isFormSubmitted) {
+            let checkIfUserExists = async () => {
+                let options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email
+                    }),
+                };
 
-			<div>
-				<input
-					type="text"
-					value={firstName}
-					onChange={(event) => setFirstName(event.target.value)}
-					placeholder="First Name"
-				/>
+                try {
+                    let res = await fetch('http://localhost:8080/api/user-exists', options);
+                    let resData = await res.json();
+                    if (!resData.userExists) {
+                        await sendEmail();
+                    } else {
+                        alert('User with entered username or email already exists');
+                    }
+                } catch (err) {
+                    console.log('error checking if user exists ', err);
+                }
+            };
 
-				<input
-					type="text"
-					value={lastName}
-					onChange={(event) => setLastName(event.target.value)}
-					placeholder="Last Name"
-				/>
-			</div>
+            let sendEmail = async () => {
+                let options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email
+                    }),
+                };
+                try {
+                    fetch('http://localhost:8080/api/send-verification-email', options)
+                        .then((res) => {
+                            setIsCheckingOtp(true);
+                        });
+                } catch (err) {
+                    console.log('error sending verification email ', err);
+                }
+            };
 
-			<div>
-				<label>Birthdate</label>
-				<DatePicker
-					selected={selectedDate}
-					onChange={(date) => setSelectedDate(date)}
-					dateFormat="dd/MM/yyyy"
-					showYearDropdown
-					scrollableMonthYearDropdown
-				/>
-			</div>
+            checkIfUserExists();
+        }
+        // eslint-disable-next-line
+    }, [isFormSubmitted]);
 
-			<input
-				type="password"
-				value={password}
-				onChange={(event) => setPassword(event.target.value)}
-				placeholder="Password"
-			/>
+    useEffect(() => {
+        if (isOtpSubmitted) {
+            let verifyOtp = async () => {
+                let otpOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        otp: otp
+                    }),
+                };
 
-			<button type="submit" onClick={handleOnSubmit}>Sign Up</button>
-		</div>
-	);
+                try {
+                    let res = await fetch('http://localhost:8080/api/verify-otp', otpOptions);
+                    let resData = await res.json();
+                    console.log('>>> inside otp useEffect, resData is ', resData);
+                    if (resData.isVerified) {
+                        await addUser();
+                    } else {
+                        alert('You have entered incorrect OTP, Please try again');
+                        setIsFormSubmitted(false);
+                        setIsOtpSubmitted(false);
+                        setIsCheckingOtp(false);
+                    }
+                } catch (err) {
+                    console.log('error verifying otp: ', err);
+                }
+            };
+
+            let addUser = async () => {
+                let userOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        birthDate: selectedDate,
+                        password: password
+                    }),
+                };
+
+                try {
+                    fetch('http://localhost:8080/api/add-user', userOptions)
+                        .then((res) => {
+                            console.log('>>>> user is inserted succesfully');
+                            navigate('/signin');
+                        });
+                } catch (err) {
+                    console.log('error inserting user ', err);
+                }
+            };
+
+            verifyOtp();
+        }
+    });
+
+    return (
+        <div className="signup-container">
+            <div className={isCheckingOtp ? "hidden" : "signup-form"}>
+                <p className="signup-title">From signup page.</p>
+
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    placeholder="Username"
+                    className="signup-input"
+                />
+
+                <input
+                    type="text"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="Email"
+                    className="signup-input"
+                />
+
+                <div className="name-fields">
+                    <input
+                        type="text"
+                        value={firstName}
+                        onChange={(event) => setFirstName(event.target.value)}
+                        placeholder="First Name"
+                        className="signup-input"
+                    />
+
+                    <input
+                        type="text"
+                        value={lastName}
+                        onChange={(event) => setLastName(event.target.value)}
+                        placeholder="Last Name"
+                        className="signup-input"
+                    />
+                </div>
+
+                <div className="birthdate-field">
+                    <label>Birthdate</label>
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(new Date(date))}
+                        dateFormat="dd/MM/yyyy"
+                        showYearDropdown
+                        scrollableMonthYearDropdown
+                        className="signup-datepicker"
+                    />
+                </div>
+
+                <div className="password-fields">
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Password"
+                        className="signup-input"
+                    />
+                    <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(event) => setConfirmPassword(event.target.value)}
+                        placeholder="Confirm Password"
+                        className="signup-input"
+                    />
+                </div>
+
+                <button type="submit" onClick={handleFormSubmit} className="signup-button">Sign Up</button>
+            </div>
+            <div className={isCheckingOtp ? "otp-form" : "hidden"}>
+                <p className="otp-title">Enter your OTP here</p>
+                <input
+                    type="number"
+                    onChange={(event) => setOtp(event.target.value)}
+                    placeholder="OTP"
+                    className="otp-input"
+                />
+                <button type="submit" onClick={handleOtpSubmit} className="otp-button">Submit</button>
+            </div>
+        </div>
+    );
 };
 
 export default SignUp;

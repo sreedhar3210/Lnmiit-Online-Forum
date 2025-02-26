@@ -17,8 +17,8 @@ const sendMail = async(transporter, options) => {
 	await transporter.sendMail(options);
 }
 
-const sendVerificationEmail = async(firstName, lastName, email) => {
-	const options = verificationOptions(firstName, lastName, email);
+const sendVerificationEmail = async(firstName, lastName, email, otpKey) => {
+	const options = verificationOptions(firstName, lastName, email, otpKey);
 	await sendMail(transporter, options);
 }
 

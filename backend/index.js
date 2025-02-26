@@ -10,7 +10,8 @@ const port = 8080;
 const postRoutes = require('./routes/postRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const tagRoutes = require('./routes/tagRoutes');
-const emailRoutes = require('./routes/emailRoutes');
+const otpRoutes = require('./routes/otpRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,7 +22,8 @@ mongoDB();
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', tagRoutes);
-app.use('/api', emailRoutes);
+app.use('/api', otpRoutes);
+app.use('/api', userRoutes);
 
 app.listen(port,() => {
     console.log('listening on the port ' + port);

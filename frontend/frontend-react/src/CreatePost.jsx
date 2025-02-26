@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-import AddTagModal from './AddTagModal';
+import AddTag from './AddTag';
 import './css/CreatePost.css';
 
 const CreatePost = () => {  
@@ -83,7 +83,7 @@ const CreatePost = () => {
                         options={options} 
                         onChange={handleDropdownChange}
                     />
-                    <AddTagModal/>
+                    <AddTag/>
                 </div>
 
                 <button 

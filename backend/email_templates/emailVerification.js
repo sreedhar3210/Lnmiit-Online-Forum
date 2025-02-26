@@ -1,14 +1,12 @@
 require('dotenv').config();
 
-const verificationOptions = (firstName, lastName, email) => {
-
-	const randomNum = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+const verificationOptions = (firstName, lastName, email, otpKey) => {	
 
 	const htmlBody = `
 		<p>Dear ${firstName} ${lastName},</p>
 		<br>
 		<p>We hope you're doing well. This email is to verify your email address for LNMIIT Online Forum.</p>
-		<p>Your One-Time Password (OTP) for verification is: <strong>${randomNum}</strong></p>
+		<p>Your One-Time Password (OTP) for verification is: <strong>${otpKey}</strong></p>
 		<p>Please do not share this OTP with anyone.</p>
 		<p>If you did not request this verification, please ignore this email.</p>
 		<br>

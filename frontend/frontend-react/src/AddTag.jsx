@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
-import './css/AddTagModal.css';
+import './css/AddTag.css';
 
 const AddTagModal = () => {  
 
