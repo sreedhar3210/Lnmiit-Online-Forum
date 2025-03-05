@@ -8,7 +8,8 @@ const postNode = require('../data_nodes/PostNode');
 // Create a new post
 router.post('/create-post', async (req, res) => {
     const data = req.body;
-    const post = postNode(data.postContent, data.tags);
+    const post = postNode(data.postContent, data.tags, data.createdById);
+    console.log('>>> in postRoutes.js postNode is ', post);
     await mongoInsertPost(post);
     res.status(200).json({ success: true });
 });

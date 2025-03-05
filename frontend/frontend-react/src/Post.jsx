@@ -8,6 +8,7 @@ function Post({ post }) {
   const [score, setScore] = useState(post.NetScore);
   const [tmpCommentContent, setTmpCommentContent] = useState('');
   const [commentContent, setCommentContent] = useState('');
+  const userId = localStorage.getItem('UserId');
 
   const handleLike = () => {
     setScore(score+1);
@@ -68,7 +69,8 @@ function Post({ post }) {
         },
         body: JSON.stringify({
           postId: post.Id,
-          commentContent: commentContent
+          commentContent: commentContent,
+          owner: userId
         }),
       }
 

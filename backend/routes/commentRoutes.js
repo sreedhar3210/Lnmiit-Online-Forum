@@ -6,7 +6,7 @@ const commentNode = require('../data_nodes/CommentNode');
 // Create a new comment
 router.post('/post-comments', async (req, res) => {
     const data = req.body;
-    const comment = commentNode(data.postId, data.commentContent);
+    const comment = commentNode(data.postId, data.commentContent, data.owner);
     await mongoInsertComment(comment);
     res.status(200).json({ success: true });
 });

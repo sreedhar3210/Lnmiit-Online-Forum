@@ -3,7 +3,8 @@ const router = express.Router();
 const { 
 	mongoInsertUser, 
 	mongoIsThereUserWithUsernameOrUserEmail, 
-	mongoCheckLoginDetails
+	mongoCheckLoginDetails,
+	mongoGetUserWithUsername
 } = require('../mongoDB_services/mongoUserActions');
 
 const UserNode = require('../data_nodes/UserNode');
@@ -29,11 +30,19 @@ router.post('/add-user', async(req, res) => {
 
 router.post('/verify-login-details', async(req, res) => {
 	let data = req.body;
-	const validCreds = await mongoCheckLoginDetails(data.username, data.password);
+	const result = await mongoCheckLoginDetails(data.username, data.password);
 	res.status(200).json({ 
 		success: true,
-		validLogin: validCreds
+		validLogin: result.userExists,
+		userId: result.userId
 	});
+});
+
+router.post('/get-user-details', async(req, res) => {
+	console.log('>>>> got till here');
+	let data = req.body;
+	const user = await mongoGetUserWithUsername(data.username);
+	res.send(user);
 });
 
 module.exports = router;

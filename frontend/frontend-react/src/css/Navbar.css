@@ -1,0 +1,54 @@
+/* Navbar container */
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* Light gray background */
+    border-bottom: 2px solid #ddd;
+}
+
+/* Navigation buttons */
+.navbar-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    padding: 8px 15px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+/* Profile button container */
+.profile-button-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Profile button */
+.profile-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.profile-icon {
+    font-size: 30px; /* Adjust icon size */
+    color: #333;
+    transition: color 0.3s;
+}
+
+.profile-button:hover .profile-icon {
+    color: #007bff; /* Change color on hover */
+}

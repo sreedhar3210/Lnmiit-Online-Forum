@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
-const postNode = (postContent, tags) => {
+const postNode = (postContent, tags, userIdString) => {
 
     const dateInMS = Date.now();
     const dateToday = new Date(dateInMS);
     const formattedDate = dateToday.toLocaleDateString("en-GB");
+    const userId = new mongoose.Types.ObjectId(userIdString);
 
     const convertToObjectIds = (tags) => {
         var tagObjectIds = [];
@@ -19,7 +20,8 @@ const postNode = (postContent, tags) => {
         "netScore": 0,
         "comments": [],
         "tags": convertToObjectIds(tags),
-        "createdDate": formattedDate
+        "createdDate": formattedDate,
+        "owner": userId
     })
 };
 

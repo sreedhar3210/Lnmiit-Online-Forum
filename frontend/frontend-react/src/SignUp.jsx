@@ -173,44 +173,56 @@ const SignUp = () => {
     return (
         <div className="signup-container">
             <div className={isCheckingOtp ? "hidden" : "signup-form"}>
-                <p className="signup-title">From signup page.</p>
+                <h2 className="signup-title">Sign Up</h2>
 
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                    placeholder="Username"
-                    className="signup-input"
-                />
-
-                <input
-                    type="text"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="Email"
-                    className="signup-input"
-                />
-
-                <div className="name-fields">
+                <div className="signup-field">
+                    <label className="signup-label">Username</label>
                     <input
                         type="text"
-                        value={firstName}
-                        onChange={(event) => setFirstName(event.target.value)}
-                        placeholder="First Name"
-                        className="signup-input"
-                    />
-
-                    <input
-                        type="text"
-                        value={lastName}
-                        onChange={(event) => setLastName(event.target.value)}
-                        placeholder="Last Name"
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                        placeholder="Enter your username"
                         className="signup-input"
                     />
                 </div>
 
+                <div className="signup-field">
+                    <label className="signup-label">Email</label>
+                    <input
+                        type="text"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        placeholder="Enter your email"
+                        className="signup-input"
+                    />
+                </div>
+
+                <div className="name-fields">
+                    <div className="signup-field">
+                        <label className="signup-label">First Name</label>
+                        <input
+                            type="text"
+                            value={firstName}
+                            onChange={(event) => setFirstName(event.target.value)}
+                            placeholder="First Name"
+                            className="signup-input"
+                        />
+                    </div>
+
+                    <div className="signup-field">
+                        <label className="signup-label">Last Name</label>
+                        <input
+                            type="text"
+                            value={lastName}
+                            onChange={(event) => setLastName(event.target.value)}
+                            placeholder="Last Name"
+                            className="signup-input"
+                        />
+                    </div>
+                </div>
+
                 <div className="birthdate-field">
-                    <label>Birthdate</label>
+                    <label className="signup-label">Birthdate</label>
                     <DatePicker
                         selected={selectedDate}
                         onChange={(date) => setSelectedDate(new Date(date))}
@@ -222,36 +234,52 @@ const SignUp = () => {
                 </div>
 
                 <div className="password-fields">
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        placeholder="Password"
-                        className="signup-input"
-                    />
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(event) => setConfirmPassword(event.target.value)}
-                        placeholder="Confirm Password"
-                        className="signup-input"
-                    />
+                    <div className="signup-field">
+                        <label className="signup-label">Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            placeholder="Enter your password"
+                            className="signup-input"
+                        />
+                    </div>
+
+                    <div className="signup-field">
+                        <label className="signup-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(event) => setConfirmPassword(event.target.value)}
+                            placeholder="Confirm your password"
+                            className="signup-input"
+                        />
+                    </div>
                 </div>
 
                 <button type="submit" onClick={handleFormSubmit} className="signup-button">Sign Up</button>
             </div>
+
             <div className={isCheckingOtp ? "otp-form" : "hidden"}>
-                <p className="otp-title">Enter your OTP here</p>
-                <input
-                    type="number"
-                    onChange={(event) => setOtp(event.target.value)}
-                    placeholder="OTP"
-                    className="otp-input"
-                />
+                <h2 className="otp-title">Enter OTP</h2>
+                <div className="otp-field">
+                    <label className="otp-label">OTP</label>
+                    <input
+                        type="number"
+                        onChange={(event) => setOtp(event.target.value)}
+                        placeholder="Enter OTP"
+                        className="otp-input"
+                    />
+                </div>
                 <button type="submit" onClick={handleOtpSubmit} className="otp-button">Submit</button>
+            </div>
+
+            <div className="signin-link">
+                Already a member? <a href="http://localhost:3000/signin">Sign In</a>
             </div>
         </div>
     );
+
 };
 
 export default SignUp;

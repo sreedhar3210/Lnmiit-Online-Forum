@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import Post from "./Post";
 
 const DisplayPosts = () => {
@@ -26,7 +26,7 @@ const DisplayPosts = () => {
 
     return(
         <div>
-            <Navbar/>
+            {/*<Navbar/>*/}
             <p>From the display posts page.</p>
             <p>This is being got from the backend </p>
             <ul>

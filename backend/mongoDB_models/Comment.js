@@ -19,6 +19,11 @@ const CommentSchema = new Schema({
     },
     createdDate:{
         type: String
+    },
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 
 });

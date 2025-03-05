@@ -8,6 +8,7 @@ import './css/CreatePost.css';
 const CreatePost = () => {  
 
     const navigate = useNavigate();
+    const userId = localStorage.getItem('UserId');
     const [selectedTags, setSelectedTags] = useState([]);
     const [readyToSubmit, setReadyToSubmit] = useState(false);
     const [postContent, setPostContent] = useState('');
@@ -49,7 +50,8 @@ const CreatePost = () => {
               },
               body: JSON.stringify({
                 postContent: postContent,
-                tags: selectedTags
+                tags: selectedTags,
+                createdById: userId
               }),
             }
           
@@ -57,7 +59,7 @@ const CreatePost = () => {
             fetch('http://localhost:8080/api/create-post', options)
             .then((res) => {
                 setReadyToSubmit(false);
-                navigate('/display-posts');
+                navigate('/');
             })
         }
         // eslint-disable-next-line

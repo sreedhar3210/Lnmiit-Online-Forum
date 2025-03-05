@@ -17,8 +17,19 @@ const mongoInsertUser = async(user) => {
 }
 
 const mongoCheckLoginDetails = async(username, password) => {
-	const users = await User.find({ userName: username, password: password});
-	return users.length > 0;
+	const user = await User.findOne({ userName: username, password: password});
+	let res = { 
+		"userExists": user !== null, 
+		"userId": user?._id || null
+	};
+	console.log('>>>> in mongoUserActions.js response is ', res);
+	return res;
 }
 
-module.exports = { mongoInsertUser, mongoIsThereUserWithUsernameOrUserEmail, mongoCheckLoginDetails };
+const mongoGetUserWithUsername = async(username) => {
+	const user = await User.find({userName: username});
+	console.log('>>>>> in mongoUserWithUsername, fetched user is ', user);
+	return user;
+}
+
+module.exports = { mongoInsertUser, mongoIsThereUserWithUsernameOrUserEmail, mongoCheckLoginDetails, mongoGetUserWithUsername };
