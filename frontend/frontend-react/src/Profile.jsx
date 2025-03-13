@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from "react";
 import Navbar from './Navbar';
 import './css/Profile.css';
+import axios from 'axios';
 
 const Profile = () => {
 
@@ -11,7 +12,30 @@ const Profile = () => {
 	    lastName: '',
 	    birthDate: ''
 	});
+	const [file, setFile] = useState(null);
 	const username = localStorage.getItem('Username');
+
+	const handleFileChange = (event) => {
+		setFile(event.target.files[0]);
+	}
+
+	const handleFileSubmit = async() => {
+		console.log('>>> file on handleFileSubmit is ', file);
+		try {
+			const formData = new FormData();
+			formData.append('image', file);
+	      	const response = await axios.post('http://localhost:8080/api/upload-profile-picture', formData, {
+	        	headers: {
+	          		'Content-Type': 'multipart/form-data',
+	        	},
+	      	});
+	      	console.log('Upload successful:', response.data);
+	      	alert("upload successful");
+	    }catch (error) {
+		    console.error('Upload failed:', error);
+		    alert("upload failed");
+	    }
+	}
 
 	const handleLogoutButton = () => {
 		localStorage.removeItem('Username');
@@ -121,6 +145,16 @@ const Profile = () => {
 
 		<div>
 			<button onClick={handleLogoutButton}>Logout</button>
+		</div>
+
+		<div>
+			{/*for adding profile picture.*/}
+			<input
+				type="file"
+				id="file"
+				onChange={handleFileChange}
+			/>
+			<button onClick={handleFileSubmit}>Upload</button>
 		</div>
 	</div>
 )

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const otpNode = require('../data_nodes/OtpNode');
-const sendVerificationEmail = require('../sendEmails');
+const sendVerificationEmail = require('../utility_classes/sendEmails');
 const { otpGenerator } = require('../utils');
 const { mongoInsertOtp, mongoVerifyOtp } = require('../mongoDB_services/mongoOtpActions');
 

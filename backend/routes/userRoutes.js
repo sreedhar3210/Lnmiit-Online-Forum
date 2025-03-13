@@ -6,8 +6,8 @@ const {
 	mongoCheckLoginDetails,
 	mongoGetUserWithUsername
 } = require('../mongoDB_services/mongoUserActions');
-
 const UserNode = require('../data_nodes/UserNode');
+const { handleFileUpload, uploadFile } = require('../utility_classes/uploadFiles');
 
 router.post('/user-exists', async(req, res) => {
 	let data = req.body;
@@ -43,6 +43,11 @@ router.post('/get-user-details', async(req, res) => {
 	let data = req.body;
 	const user = await mongoGetUserWithUsername(data.username);
 	res.send(user);
+});
+
+router.post('/upload-profile-picture', async(req, res) => {
+	handleFileUpload();
+	await uploadFile(req);
 });
 
 module.exports = router;
