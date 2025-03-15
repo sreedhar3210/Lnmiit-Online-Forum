@@ -45,9 +45,8 @@ router.post('/get-user-details', async(req, res) => {
 	res.send(user);
 });
 
-router.post('/upload-profile-picture', async(req, res) => {
-	handleFileUpload();
-	await uploadFile(req);
+router.post('/upload-profile-picture', handleFileUpload, async(req, res) => {
+	await uploadFile(req, res);
 });
 
 module.exports = router;

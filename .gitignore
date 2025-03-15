@@ -1,0 +1,2 @@
+#ignoring env file to make passwords secure.
+.env
