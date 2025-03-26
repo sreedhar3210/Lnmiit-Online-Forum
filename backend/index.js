@@ -12,6 +12,7 @@ const commentRoutes = require('./routes/commentRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const otpRoutes = require('./routes/otpRoutes');
 const userRoutes = require('./routes/userRoutes');
+const likeRoutes = require('./routes/likeRoutes');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,6 +25,7 @@ app.use('/api', commentRoutes);
 app.use('/api', tagRoutes);
 app.use('/api', otpRoutes);
 app.use('/api', userRoutes);
+app.use('/api', likeRoutes);
 
 app.listen(port,() => {
     console.log('listening on the port ' + port);

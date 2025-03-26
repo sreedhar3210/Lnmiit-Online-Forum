@@ -1,5 +1,13 @@
 const User = require('../mongoDB_models/User');
 
+const formatUser = (user) => {
+	return({
+		"Id": user._id,
+		"Username": user.userName,
+		"ProfilePicUrl": user.profilePicUrl
+	})
+}
+
 const mongoIsThereUserWithUsernameOrUserEmail = async(username, useremail) => {
 	const users = await User.find({
 		"$or": [
@@ -7,7 +15,6 @@ const mongoIsThereUserWithUsernameOrUserEmail = async(username, useremail) => {
 			{"userEmail": useremail}
 		]
 	});
-	console.log('>>>>> in mongoUserActions userWithUsernameorEmail is ', users);
 	return users.length > 0;
 }
 
@@ -22,14 +29,37 @@ const mongoCheckLoginDetails = async(username, password) => {
 		"userExists": user !== null, 
 		"userId": user?._id || null
 	};
-	console.log('>>>> in mongoUserActions.js response is ', res);
 	return res;
+}
+
+const mongoUpsertProfilePicture = async(userId, profileUrl) => {
+	await User.updateOne(
+        { _id: userId },
+        { $set: { profileUrl: profileUrl } } // Only update the ProfileUrl field
+    );
 }
 
 const mongoGetUserWithUsername = async(username) => {
 	const user = await User.find({userName: username});
-	console.log('>>>>> in mongoUserWithUsername, fetched user is ', user);
 	return user;
 }
 
-module.exports = { mongoInsertUser, mongoIsThereUserWithUsernameOrUserEmail, mongoCheckLoginDetails, mongoGetUserWithUsername };
+const mongoFetchUsers = async() => {
+	const usersList = await User.find();
+	var formattedUsersList = [];
+	usersList.forEach((user) => {
+		let formattedUser = formatUser(user);
+		formattedUser.Id = String(formattedUser.Id);
+		formattedUsersList.push(formattedUser);
+	});
+	return formattedUsersList;
+}
+
+module.exports = { 
+	mongoInsertUser, 
+	mongoIsThereUserWithUsernameOrUserEmail,
+	mongoCheckLoginDetails, 
+	mongoUpsertProfilePicture,
+	mongoGetUserWithUsername,
+	mongoFetchUsers
+};

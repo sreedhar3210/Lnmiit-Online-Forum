@@ -1,62 +1,112 @@
-/* Container for the profile page */
+/* Profile.css */
+
+/* Container for the entire profile page */
 .profile-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+    padding: 20px;
     font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
 }
 
-/* Title */
+/* Profile title */
 .profile-title {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     margin-bottom: 20px;
     color: #333;
 }
 
-/* Fields container */
+/* Container for profile fields */
 .profile-fields {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    width: 100%;
+    max-width: 500px;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
 }
 
-/* Individual field container */
-.profile-field {
+/* Profile picture container */
+.profile-picure-container {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-/* Labels */
+/* Profile picture */
+.profile-picure {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image fits within the circle */
+    border: 3px solid #007bff; /* Adds a border around the image */
+}
+
+/* Profile field container */
+.profile-field {
+    margin-bottom: 15px;
+}
+
+/* Profile field label */
 .profile-label {
-    font-size: 14px;
+    display: block;
+    font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
     color: #555;
 }
 
-/* Input fields */
+/* Profile input field */
 .profile-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
-    background-color: #f0f0f0;
-    outline: none;
-    transition: border-color 0.3s ease;
+    color: #333;
+    background-color: #f9f9f9;
+    cursor: not-allowed; /* Indicates the field is read-only */
 }
 
-.profile-input:focus {
-    border-color: #007bff;
+/* Logout button */
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #004080;
+}
+
+/* File upload section */
+input[type="file"] {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Upload button */
+button[onClick="handleFileSubmit"] {
+    background-color: #28a745;
+}
+
+button[onClick="handleFileSubmit"]:hover {
+    background-color: #218838;
+}
+
+button[onClick="handleFileSubmit"]:active {
+    background-color: #1e7e34;
 }

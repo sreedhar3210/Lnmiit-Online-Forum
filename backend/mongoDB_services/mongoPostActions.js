@@ -7,7 +7,8 @@ const formatPost = (post) => {
         "NetScore": post.netScore,
         "CreatedDate": post.createdDate,
         "Tags": [],
-        "Comments": []
+        "Comments": [],
+        "Owner": post.owner
     });
 }
 
@@ -33,6 +34,7 @@ const mongoFetchPosts = async(...args) => {
             formattedPost = formatPost(posts[i]);
             formattedPost.Id = String(formattedPost.Id);
             formattedPost.Tags = convertObjIdsToStrings(formattedPost.Tags);
+            formattedPost.Owner = String(formattedPost.Owner);
             formattedPosts.push(formattedPost); 
         }
     }

@@ -1,27 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import './css/Post.css';
 import Comment from './Comment';
+import { BiSolidLike } from "react-icons/bi";
+import { BiLike } from "react-icons/bi";
+import { BiSolidDislike } from "react-icons/bi";
+import { BiDislike } from "react-icons/bi";
 
 function Post({ post }) {
 
+  const [isLiked, setIsLiked] = useState(post.IsLiked);
+  const [isDisliked, setIsDisliked] = useState(post.IsDisliked);
   const [toDelete, setToDelete] = useState(false);
   const [score, setScore] = useState(post.NetScore);
+  const [isScoreChanged, setisScoreChanged] = useState(false);
   const [tmpCommentContent, setTmpCommentContent] = useState('');
   const [commentContent, setCommentContent] = useState('');
   const userId = localStorage.getItem('UserId');
 
   const handleLike = () => {
-    setScore(score+1);
-    //post.NetScore+=score;
+      setScore(isLiked ? score-1 : score+(isDisliked ? 2 : 1));                //updating based on previous isLiked
+      setIsDisliked(false);
+      setIsLiked(!isLiked);
+      setisScoreChanged(true);
   }
 
   const handleDisLike = () => {
-    setScore(score-1);
-    //post.NetScore+=score;
+      setScore(isDisliked ? score+1 : score-(isLiked ? 2 : 1));             //updating based on previous isDisliked
+      setIsLiked(false);
+      setIsDisliked(!isDisliked);
+      setisScoreChanged(true);
   }
 
   const handleDelete = () => {
-    console.log('>>>> Delete button is clicked');
     setToDelete(true);
   }
 
@@ -36,10 +46,9 @@ function Post({ post }) {
 
   //useEffect for like or dislike.
   useEffect(() => {
-    
-    if(score !== post.NetScore){
+    if(isScoreChanged){
 
-      let options = {
+      let scoreOptions = {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -50,8 +59,24 @@ function Post({ post }) {
         }),
       }
     
-      fetch('http://localhost:8080/api/post-likes-or-dislikes', options)
+      fetch('http://localhost:8080/api/post-likes-or-dislikes', scoreOptions);
+
+      let postLikeOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          postId: post.Id,
+          userId: userId,
+          isLiked: isLiked,
+          isDisliked: isDisliked
+        }),
+      }
+
+      fetch('http://localhost:8080/api/add-update-post-like', postLikeOptions);
     }
+
     // eslint-disable-next-line
   }, [score]);
   
@@ -116,27 +141,45 @@ function Post({ post }) {
 
   return (
     <div className="post-container">
-      <p className="post-content">
-        {post.PostContent}
-        <br/>
-        <span className="post-date">Post Created at {post.CreatedDate}</span>
-      </p>
-
-      {/* Like and Dislike Buttons */}
-      <div className="reaction-buttons">
-        <button className="like-button" onClick={handleLike}>👍 Like</button>
-        <button className="dislike-button" onClick={handleDisLike}>👎 Dislike</button>
-        <p className="net-score">NetScore is {score}</p>
-        <button className="delete-button" onClick={handleDelete}>Delete</button>
+      <div className="post-header">
+        <img
+          src={post.OwnerProfilePic}
+          alt="No Profile Pic Uploaded"
+          className="profile-picture"
+        />
+        <div className="username">{post.Owner}</div>
       </div>
 
-      {/* Displaying comments */}
-      <ul className="comment-list">
-        {commentItems}
-      </ul>
+      <div className="post-content-container">
+        <p className="post-content">{post.PostContent}</p>
+        <span className="post-date">Post Created at {post.CreatedDate}</span>
+      </div>
 
-      {/* Comment Section */}
-      <div className="comment-section">
+      <div className="reaction-buttons">
+        <button
+          className={`like-button ${isLiked ? "liked" : ""}`}
+          onClick={handleLike}
+        >
+            {isLiked ? <BiSolidLike/> : <BiLike/>}
+        </button>
+        <button
+          className={`dislike-button ${isDisliked ? "disliked" : ""}`}
+          onClick={handleDisLike}
+        >
+            {isDisliked ? <BiSolidDislike/> :  <BiDislike/>}
+        </button>
+        <span className="net-score">NetScore: {score}</span>
+        <button className="delete-button" onClick={handleDelete}>
+          Delete
+        </button>
+      </div>
+
+      <div className="comments-section">
+        <h3 className="comments-title">Comments</h3>
+        <ul className="comment-list">{commentItems}</ul>
+      </div>
+
+      <div className="comment-form">
         <input
           type="text"
           placeholder="Write a comment..."
@@ -144,10 +187,9 @@ function Post({ post }) {
           value={tmpCommentContent}
           onChange={handlecommentContentChange}
         />
-        <button
-          className="add-comment-button"
-          onClick={handleOnCommentSubmit}
-        >Add Comment</button>
+        <button className="add-comment-button" onClick={handleOnCommentSubmit}>
+          Add Comment
+        </button>
       </div>
     </div>
   );

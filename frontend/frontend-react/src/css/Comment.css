@@ -1,0 +1,64 @@
+.comment-container {
+    border-left: 3px solid #e1e1e1;
+    padding-left: 12px;
+    margin: 12px 0;
+  }
+  
+  .comment-content {
+    margin-bottom: 8px;
+  }
+  
+  .comment-content p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .comment-date {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .comment-reactions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  
+  .like-button, .dislike-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #666;
+    transition: all 0.2s;
+  }
+  
+  .like-button.liked {
+    color: #3b82f6;
+  }
+  
+  .dislike-button.disliked {
+    color: #ef4444;
+  }
+  
+  .like-button:hover {
+    color: #3b82f6;
+    transform: scale(1.1);
+  }
+  
+  .dislike-button:hover {
+    color: #ef4444;
+    transform: scale(1.1);
+  }
+  
+  .net-score {
+    font-size: 13px;
+    color: #333;
+    margin-left: auto;
+  }

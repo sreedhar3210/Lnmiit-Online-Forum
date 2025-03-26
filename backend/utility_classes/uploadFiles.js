@@ -3,6 +3,7 @@ const cloudinary = require('cloudinary').v2;
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname, '../.env') });
 const cloudSecretAPI = process.env.CLOUDINARY_SECRET_API;
+const { mongoUpsertProfilePicture } = require('../mongoDB_services/mongoUserActions');
 
 // Configure Cloudinary once at the beginning of your application
 cloudinary.config({
@@ -17,17 +18,20 @@ const upload = multer({ storage: storage });
 const handleFileUpload = upload.single('image');
 
 const uploadFile = async (req, res) => {
+		const userId = req.body.userId;
     console.log('>>>> 1. secret api is ', cloudSecretAPI);
     console.log('>>>> in uploadFiles.js files is ', req.file);
+    console.log('>>>> in uploadFiles.js userId is ', userId);
 
     try {
         const uploadResult = await cloudinary.uploader.upload_stream(
             { resource_type: 'image', folder: 'Lnm-Profile-Pictures' },
-            (error, result) => {
+            async(error, result) => {
                 if (error) {
                     console.error('Upload failed:', error);
                     return res.status(500).json({ success: false, error: 'Upload failed' });
                 }
+                await mongoUpsertProfilePicture(userId, result.secure_url);
                 console.log('Upload successful:', result);
                 return res.status(200).json({ success: true, imageUrl: result.secure_url });
             }

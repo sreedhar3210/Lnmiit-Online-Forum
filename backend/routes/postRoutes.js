@@ -16,7 +16,8 @@ router.post('/create-post', async (req, res) => {
 
 // Get all posts
 router.get('/get-posts', async (req, res) => {
-    const posts = await mongoFetchData();
+    console.log('>>>> in post routes userId is ', req.query.userId);
+    const posts = await mongoFetchData(req.query.userId);
     res.send(posts);
 });
 

@@ -10,7 +10,8 @@ const Profile = () => {
 	    userEmail: '',
 	    firstName: '',
 	    lastName: '',
-	    birthDate: ''
+	    birthDate: '',
+	    profileUrl: ''
 	});
 	const [file, setFile] = useState(null);
 	const username = localStorage.getItem('Username');
@@ -24,6 +25,7 @@ const Profile = () => {
 		try {
 			const formData = new FormData();
 			formData.append('image', file);
+			formData.append('userId', localStorage.getItem('UserId'));
 	      	const response = await axios.post('http://localhost:8080/api/upload-profile-picture', formData, {
 	        	headers: {
 	          		'Content-Type': 'multipart/form-data',
@@ -64,7 +66,8 @@ const Profile = () => {
                 userEmail: data[0].userEmail || '',
                 firstName: data[0].firstName || '',
                 lastName: data[0].lastName || '',
-                birthDate: data[0].birthDate || ''
+                birthDate: data[0].birthDate || '',
+                profileUrl: data[0].profileUrl || ''
             });
 		})
 	// eslint-disable-next-line
@@ -76,6 +79,9 @@ const Profile = () => {
 		<h2 className="profile-title">My Profile Page</h2>
 
 		<div className="profile-fields">
+			<div className="profile-picure-container">
+				<img src={user.profileUrl} alt="No bomma uploaded." className="profile-picure"/>
+			</div>
 			<div className="profile-field">
 				<label htmlFor="Username" className="profile-label">Username:</label>
 				<input
