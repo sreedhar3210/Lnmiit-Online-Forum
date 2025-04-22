@@ -6,6 +6,7 @@ import './css/Navbar.css';
 const Navbar = () => {
 
     const navigate = useNavigate();
+    const username = localStorage.getItem('Username');
 
     const handleonClickHome = () => {
         navigate('/');
@@ -16,7 +17,8 @@ const Navbar = () => {
     };
 
     const handleOnClickProfile = () => {
-        navigate('/my-profile');
+        const myProfileUrl = '/profile/' + username;
+        navigate(myProfileUrl);
     };
 
     return (
@@ -28,6 +30,7 @@ const Navbar = () => {
             <div className="profile-button-container">
                 <button className="profile-button" onClick={handleOnClickProfile}>
                     <FaUserCircle className="profile-icon" />
+                    {username}
                 </button>
             </div>
         </div>

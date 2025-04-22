@@ -27,7 +27,15 @@ const UserSchema = new Schema({
 	},
 	profilePicUrl:{
 		type: String
-	}
+	},
+	followers: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	}],
+	following: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	}]
 
 }, {
 	versionKey: false

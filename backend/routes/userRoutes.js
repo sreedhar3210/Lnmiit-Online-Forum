@@ -4,7 +4,8 @@ const {
 	mongoInsertUser, 
 	mongoIsThereUserWithUsernameOrUserEmail, 
 	mongoCheckLoginDetails,
-	mongoGetUserWithUsername
+	mongoGetUserWithUsername,
+	mongoUpsertProfilePicture
 } = require('../mongoDB_services/mongoUserActions');
 const UserNode = require('../data_nodes/UserNode');
 const { handleFileUpload, uploadFile } = require('../utility_classes/uploadFiles');
@@ -46,7 +47,21 @@ router.post('/get-user-details', async(req, res) => {
 });
 
 router.post('/upload-profile-picture', handleFileUpload, async(req, res) => {
-	await uploadFile(req, res);
+	const userId = req.body.userId;
+	console.log('>>>> in userRoutes upload profile pics method userId is ', userId);
+
+	//passing this async function as parameter
+	uploadFile(req, res, async(uploadRes) => {
+		if(uploadRes){
+			console.log('>>>>> response got to this call back function is ', uploadRes);
+			if(uploadRes.success){
+				await mongoUpsertProfilePicture(userId, uploadRes.imageUrl);
+				console.log('>>>> success grand success');
+				res.send({ success: true })
+			}
+		}
+	});
+	
 });
 
 module.exports = router;

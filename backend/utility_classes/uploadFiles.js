@@ -17,11 +17,8 @@ const upload = multer({ storage: storage });
 
 const handleFileUpload = upload.single('image');
 
-const uploadFile = async (req, res) => {
-		const userId = req.body.userId;
-    console.log('>>>> 1. secret api is ', cloudSecretAPI);
-    console.log('>>>> in uploadFiles.js files is ', req.file);
-    console.log('>>>> in uploadFiles.js userId is ', userId);
+const uploadFile = async (req, res, callbackFunc) => {
+		//const userId = req.body.userId;
 
     try {
         const uploadResult = await cloudinary.uploader.upload_stream(
@@ -29,17 +26,16 @@ const uploadFile = async (req, res) => {
             async(error, result) => {
                 if (error) {
                     console.error('Upload failed:', error);
-                    return res.status(500).json({ success: false, error: 'Upload failed' });
+                    callbackFunc({ success: false, error: 'Upload failed', status: 500});
                 }
-                await mongoUpsertProfilePicture(userId, result.secure_url);
-                console.log('Upload successful:', result);
-                return res.status(200).json({ success: true, imageUrl: result.secure_url });
+
+                callbackFunc({ success: true, imageUrl: result.secure_url, status: 200 });
             }
         ).end(req.file.buffer); // Correctly handle the buffer
 
     } catch (error) {
         console.error('Unexpected error:', error);
-        return res.status(500).json({ success: false, error: 'Unexpected error occurred' });
+        callbackFunc({ success: false, error: 'Unexpected error occurred', status: 500 });
     }
 };
 

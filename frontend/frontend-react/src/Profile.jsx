@@ -1,4 +1,5 @@
 import React, { useState, useEffect} from "react";
+import { useParams } from "react-router-dom";
 import Navbar from './Navbar';
 import './css/Profile.css';
 import axios from 'axios';
@@ -13,8 +14,17 @@ const Profile = () => {
 	    birthDate: '',
 	    profileUrl: ''
 	});
-	const [file, setFile] = useState(null);
 	const username = localStorage.getItem('Username');
+	const { profileId } = useParams();
+	const [file, setFile] = useState(null);
+	const [isLoggedInUserProfile, setIsLoggedInUserProfile] = useState(username === profileId);
+	const [isEditProfile, setIsEditProfile] = useState(false);
+	
+	// const suggestedUsers = [
+	// 	{username: 'mike.mirzyanov', profilePicUrl: 'https://unsplash.com/photos/airplane-on-ground-surrounded-with-trees-G85VuTpw6jg'},
+	// 	{username: 'Colleseum', profilePicUrl: 'https://unsplash.com/photos/gray-concrete-building-during-daytime-Q4g0Q-eVVEg'},
+	// 	{username: 'mount.pikachu', profilePicUrl: 'https://unsplash.com/photos/aerial-photo-of-machu-picchu-peru-PO7CGnoDFUI'}
+	// ];
 
 	const handleFileChange = (event) => {
 		setFile(event.target.files[0]);
@@ -33,6 +43,7 @@ const Profile = () => {
 	      	});
 	      	console.log('Upload successful:', response.data);
 	      	alert("upload successful");
+	      	setIsEditProfile(false);
 	    }catch (error) {
 		    console.error('Upload failed:', error);
 		    alert("upload failed");
@@ -45,6 +56,11 @@ const Profile = () => {
 		window.location.reload();
 	};
 
+	//currently we are allowing to change only profile picture.
+	const handleEditProfile = () => {
+		setIsEditProfile(true);
+	}
+
 	useEffect(() => {
 		let options = {
 			method: 'POST',
@@ -52,11 +68,12 @@ const Profile = () => {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				username: username
+				username: profileId
 			})
 		};
-		console.log('>>>> useEffect is called');
+		console.log('>>>> useEffect is called with profileId as ', profileId);
 
+		//for fetching profile information and suggested users.
 		fetch('http://localhost:8080/api/get-user-details', options)
 		.then(res => res.json())
 		.then(data => {
@@ -67,7 +84,7 @@ const Profile = () => {
                 firstName: data[0].firstName || '',
                 lastName: data[0].lastName || '',
                 birthDate: data[0].birthDate || '',
-                profileUrl: data[0].profileUrl || ''
+                profileUrl: data[0].profilePicUrl || ''
             });
 		})
 	// eslint-disable-next-line
@@ -78,9 +95,10 @@ const Profile = () => {
 		<Navbar/>
 		<h2 className="profile-title">My Profile Page</h2>
 
-		<div className="profile-fields">
+		<div className="profile-fields" hidden={isEditProfile}>
 			<div className="profile-picure-container">
 				<img src={user.profileUrl} alt="No bomma uploaded." className="profile-picure"/>
+				<button onClick={handleEditProfile}>Edit profile</button>
 			</div>
 			<div className="profile-field">
 				<label htmlFor="Username" className="profile-label">Username:</label>
@@ -147,13 +165,13 @@ const Profile = () => {
 					readOnly
 				/>
 			</div>
+
+			<div hidden={!isLoggedInUserProfile}>
+				<button onClick={handleLogoutButton}>Logout</button>
+			</div>
 		</div>
 
-		<div>
-			<button onClick={handleLogoutButton}>Logout</button>
-		</div>
-
-		<div>
+		<div hidden={!isEditProfile}>
 			{/*for adding profile picture.*/}
 			<input
 				type="file"

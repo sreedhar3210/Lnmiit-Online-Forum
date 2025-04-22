@@ -35,7 +35,7 @@ const mongoCheckLoginDetails = async(username, password) => {
 const mongoUpsertProfilePicture = async(userId, profileUrl) => {
 	await User.updateOne(
         { _id: userId },
-        { $set: { profileUrl: profileUrl } } // Only update the ProfileUrl field
+        { $set: { profilePicUrl: profileUrl } } // Only update the ProfileUrl field
     );
 }
 
